@@ -1,0 +1,47 @@
+.nutrition {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  border: 5px solid #120e16;
+  color: #cccccc;
+
+  table {
+    margin: 0;
+    border: 3px solid #434343;
+    padding: 16px 10px;
+    width: 255px;
+
+    thead {
+      font-weight: 900;
+
+      tr {
+        font-size: 13 / 16 * 1em;
+
+        &:first-child {
+          font-size: 22 / 16 * 1em;
+        }
+      }
+    }
+
+    tr {
+        td, th {
+            &:nth-child(2) {
+                text-align: right;
+            }
+        }
+    }
+  }
+
+  .divider {
+    border-bottom: 4px solid #616161;
+
+    &.thin {
+        border-bottom-width: 1px;
+    }
+
+    &.thick {
+        border-bottom-width: 11px;
+    }
+  }
+}

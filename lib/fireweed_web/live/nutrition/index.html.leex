@@ -1,0 +1,33 @@
+<section>
+  <div>
+    <section>
+      <form phx-change="search" phx-target="<%= @myself %>" onsubmit="return false;">
+        <input type="text" placeholder="Search for foods" aria-label="Search for foods" phx-debounce="250" name="query" value="<%= @nutrition[:query] %>" />
+      </form>
+    </section>
+    <section>
+      <ul>
+        <%= for food <-( @nutrition[:foods] || []) do %>
+          <% %{"food_name" => name, "food_description" => desc, "food_type" => type, "food_id" => id } = food %>
+          <li role="button" phx-click="select-food" phx-target="<%= @myself %>" phx-value-id="<%= id %>" data-selected="<%= id == @nutrition[:food_id] %>" class="border-b-1 border-black-light">
+            <h6>
+              <span class="text-sm" data-brand-id="<%=id%>"><%=id%></span>
+              <span class="text-sm text-secondary"><%= Map.get(food, "brand_name") %></span>
+            </h6>
+            <h4><%=name%></h4>
+            <p><%=desc%></p>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  </div>
+  <div>
+    <section>
+      <%= if @nutrition[:food_id] do %>
+        <%= live_component(@socket, FireweedWeb.Nutrition.Show, id: FireweedWeb.Nutrition.Show, food: @nutrition[:food]) %>
+      <% else %>
+        <p>Nothing to see here :(</p>
+      <% end %>
+    </section>
+  </div>
+</section>

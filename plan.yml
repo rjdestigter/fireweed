@@ -1,0 +1,16 @@
+events:
+    when: datetime
+    till: datetime
+    interval: int
+    type: string
+
+tags:
+    type: string
+    value: string
+
+space:
+    type:
+        - point
+        - line
+        - polygon
+        

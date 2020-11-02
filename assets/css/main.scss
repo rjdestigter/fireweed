@@ -1,0 +1,165 @@
+@use "./mixins";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+$accent-gray: rgb(168, 168, 168);
+$background: #f5f5f5;
+
+html,
+body,
+[data-root] {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background-color: lime;
+  color: #f5f5f5;
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
+* {
+  position: relative;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+[data-root] {
+  display: flex;
+
+  > nav {
+    background-color: #1f1f1f;
+    padding-top: 16px;
+    flex: 0 0 auto;
+
+    > ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+
+      > li {
+        padding: 8px 16px;
+
+        @include mixins.icon-button {
+          width: 100%;
+        }
+      }
+    }
+
+    + section {
+      display: flex;
+      flex: 1 1 auto;
+
+      > div {
+        background-color: #323232;
+        overflow: auto;
+        &:first-child {
+          display: flex;
+          flex-direction: column;
+          flex: 0 0 320px;
+          background-color: #282828;
+
+          > section {
+            &:nth-child(2) {
+              overflow: auto;
+              /* width */
+              &::-webkit-scrollbar {
+                width: 4px;
+              }
+
+              /* Track */
+              &::-webkit-scrollbar-track {
+                background: #282828;
+              }
+
+              /* Handle */
+              &::-webkit-scrollbar-thumb {
+                background: #0d9863;
+              }
+
+              /* Handle on hover */
+              &::-webkit-scrollbar-thumb:hover {
+                background: #11b856;
+              }
+            }
+            input {
+              margin: 16px;
+              border-radius: 9999px;
+              outline: none;
+              border: none;
+              padding: 16px;
+              padding-left: calc(16px + 1.5em);
+              background: #393939;
+              color: #f5f5f5;
+              background-image: url("/icons/search.svg");
+              background-repeat: no-repeat;
+              background-position: left 1em center;
+              background-size: 1em;
+              width: calc(100% - 32px);
+              box-sizing: border-box;
+            }
+
+            ul {
+              overflow: auto;
+              margin: 0;
+              padding: 0;
+              list-style-type: none;
+
+              > li {
+                padding: 16px 16px 16px 14px;
+                cursor: pointer;
+                border-left: 2px solid transparent;
+                transition: border-left-color 0.2s;
+
+                &:hover, &[data-selected="true"] {
+                  border-left-color: rgb(17, 185, 85);
+                  background: #333333;
+                  background: linear-gradient(70deg, #282828 0%, #333333 100%)
+                }
+
+                h6 {
+                  margin: 0 0 8px 0;  
+                  font-weight: normal;
+                  display: flex;
+                  [data-brand-id] {
+                    flex: 1 1 auto;
+                    color: rgb(85, 85, 85);
+                  }
+
+                  .brand {
+                    color: #0a7f6e;
+                  }
+                }
+
+                h4 {
+                  margin: 0 0 0 0;
+                  color: #c5c5c5;
+                }
+
+                p {
+                  margin: 4px 0;
+                  color: #858585;
+                  font-size: 0.8em;
+                  line-height: 1.5em;
+                }
+              }
+            }
+          }
+        }
+
+        &:not(:first-child) {
+          flex: 1 1 auto;
+
+          >section {
+            padding: 16px;
+          }
+        }
+      }
+    }
+  }
+}

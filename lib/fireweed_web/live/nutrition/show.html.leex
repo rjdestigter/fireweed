@@ -1,0 +1,22 @@
+<h1 class="text-4xl font-normal pl-4">
+  <%=
+    case @food do
+        {:ok, %{ "food" => %{"food_name" => name }}} -> name
+        _ -> nil
+    end
+%>
+</h1>
+<ul class="flex flex-wrap">
+  <%
+    servings = case @food do
+        {:ok, %{ "food" => %{"servings" => %{ "serving" => servings} }}} when is_list(servings) -> servings
+        {:ok, %{ "food" => %{"servings" => %{ "serving" => servings} }}} -> [servings]
+        _ -> []
+    end
+%>
+  <%=    for serving <- servings do %>
+    <li class="p-4">
+      <%= live_component @socket, FireweedWeb.Nutrition.Components.NutritionFacts, id: serving, serving: serving %>
+    </li>
+  <% end %>
+</ul>

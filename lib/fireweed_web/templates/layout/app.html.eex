@@ -1,0 +1,19 @@
+<div data-root class="">
+  <section class="bg-black-medium flex-grow flex justify-center items-center">
+    <div role="main" class="container">
+      <%= if @conn.assigns[:current_user] do %>
+        <%= # link @current_user.name,
+            #  to: Routes.user_show_path(@conn, :show, @current_user.id), class: "mdc-top-app-bar__title mdc-top-app-bar__action-item" %>
+        <%= link "lock_open", to: "/logout", 'aria-label': "lock_open", class: "material-icons mdc-top-app-bar__action-item mdc-icon-button" %>
+      <% else %>
+        <%= # link "login", to: "/login", 'aria-label': "login", class: "material-icons mdc-top-app-bar__action-item mdc-icon-button" %>
+      <% end %>
+      <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+        <%= # link "dashboard", to: Routes.live_dashboard_path(@conn, :home), 'aria-label': "Dashbaord", class: "material-icons mdc-top-app-bar__action-item mdc-icon-button" %>
+      <% end %>
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <%= @inner_content %>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <h1>Sign in</h1>
+
+    <p><strong>No account yet? <%= link "Sign up", to: Routes.user_index_path(@conn, :new) %> for free!</strong></p>
+    <%= form_for @conn, Routes.session_path(@conn, :create), [method: :post, as: :user], fn f -> %>
+      <div class="form-group">
+        <%= text_input f, :email, placeholder: "Email", class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= password_input f, :password, placeholder: "Password", class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= submit "Log in", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+    <p><strong>Forgot your password? <%= link "Get", to: Routes.session_path(@conn, :forgot) %> a reset link.</strong></p>
+
+    <% form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+      <div class="form-group">
+        <%= submit "Log out", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+
+  </div>
+</div>

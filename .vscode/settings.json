@@ -1,0 +1,6 @@
+{
+    "tailwindCSS.includeLanguages": {
+        "Phoenix LiveView Templates": "leex",
+        "Phoenix LiveView": "ex"
+    }
+}

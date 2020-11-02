@@ -1,0 +1,35 @@
+<h2><%= @title %></h2>
+
+<%= f = form_for @changeset, "#",
+  id: "user-form",
+  phx_target: @myself,
+  phx_change: "validate",
+  phx_submit: "save" %>
+
+  <%= label f, :name %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <%= label f, :email %>
+  <%= text_input f, :email %>
+  <%= error_tag f, :email %>
+
+  <%= label f, :is_verified %>
+  <%= checkbox f, :is_verified %>
+  <%= error_tag f, :is_verified %>
+
+  <%= if @id == :new do %>
+  <%= label f, :password %>
+  <%= password_input f, :password, value: input_value(f, :password), phx_debounce: "blur", autocomplete: "new-password" %>
+  <%= error_tag f, :password %>
+
+  <%= label f, :password_confirmation %>
+  <%= password_input f, :password_confirmation, value: input_value(f, :password_confirmation), phx_debounce: "blur", autocomplete: "new-password" %>
+  <%= error_tag f, :password_confirmation %>
+
+  <% end %>
+
+  <br />
+  <%= live_component @socket, Button, content: "Test", type: :raised %>
+  <%= submit "Save", phx_disable_with: "Saving..." %>
+</form>

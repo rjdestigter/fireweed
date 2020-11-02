@@ -1,0 +1,70 @@
+<section class="font-nutrition text-nutrition outline-nutrition px-6 py-6 inline-block bg-black-dark">
+  <table class="m-0 border-collapse" width="255">
+    <thead>
+      <tr>
+        <th colspan="2" class="font-black text-2xl pb-2 border-b-1 border-nutrition-grey">
+          Nutrition Facts
+        </th>
+      </tr>
+      <tr>
+        <th class="text-sm border-b-11 border-nutrition-grey pb-2    pt-4 align-top">Serving Size</th>
+        <th class="text-sm border-b-11 border-nutrition-grey pb-2 pt-4 align-top text-right"><%= @serving["serving_description"] %></th>
+      </tr>
+      <tr>
+        <th class="border-b-6 border-nutrition-grey pb-2 align-top">
+          <span class="text-sm whitespace-no-wrap">Amount Per Serving</span><br />
+          <span class="text-2xl pb-1">Calories</span>
+        </th>
+        <th class="border-b-4 border-nutrition-grey pb-2 text-right align-bottom text-4xl"><%= @serving["calories"] %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tbody>
+        <tr>
+          <td class="text-xs text-right font-black py-1" colspan="2">% Daily Values*</td>
+        </tr>
+        <%= render_nutrient(assigns,
+            [label: "Total Fat", weight: @serving["fat"], rdi: RDI.fat(@serving["fat"]), is_primary: true]) %>
+        <%= render_nutrient(assigns,
+            [label: "Saturated Fat", weight: @serving["saturated_fat"], rdi: RDI.saturated_fat(@serving["saturated_fat"])]) %>
+        <%= render_nutrient(assigns,
+            [label: "Trans Fat", weight: @serving["trans_fat"]]) %>
+        <%= render_nutrient(assigns,
+            [label: "Polyunsaturated Fat", weight: @serving["polyunsaturated_fat"]]) %>
+        <%= render_nutrient(assigns,
+            [label: "Monounsaturated Fat", weight: @serving["monounsaturated_fat"]]) %>
+        <%= render_nutrient(assigns,
+            [label: "Cholestorol", weight: @serving["cholestorol"] || "0", rdi: RDI.cholestorol(@serving["cholestorol"] || "0"), is_primary: true]) %>
+        <%= render_nutrient(assigns,
+            [label: "Sodium", weight: @serving["sodium"] || "0", rdi: RDI.sodium(@serving["sodium"] || "0"), is_primary: true, unit: "mg"]) %>
+        <%= render_nutrient(assigns,
+            [label: "Total Carbohydrate", weight: @serving["carbohydrate"], rdi: RDI.carbohydrate(@serving["carbohydrate"]), is_primary: true]) %>
+        <%= render_nutrient(assigns,
+            [label: "Dietary Fiber", weight: @serving["fiber"], rdi: RDI.fiber(@serving["fiber"])]) %>
+        <%= render_nutrient(assigns,
+            [label: "Sugar", weight: @serving["sugar"]]) %>
+        <%= render_nutrient(assigns,
+            [label: "Protein", weight: @serving["protein"], is_primary: true]) %>
+        <tr>
+          <td colspan="2" class="border-b-11 border-nutrition-grey">
+
+          </td>
+        </tr>
+
+        <%= render_nutrient(assigns,
+            [label: "Vitamin D", weight: @serving["vitamin_d"], is_primary: true]) %>
+
+        <%= render_nutrient(assigns,
+            [label: "Calcium", weight: @serving["calcium"], rdi: RDI.calcium(@serving["calcium"]), is_primary: true, unit: "mg"]) %>
+        <%= render_nutrient(assigns,
+            [label: "Iron", weight: @serving["iron"], rdi: RDI.iron(@serving["iron"]), is_primary: true, unit: "mg"]) %>
+        <%= render_nutrient(assigns,
+            [label: "Potassium", weight: @serving["potassium"], rdi: RDI.potassium(@serving["potassium"]), is_primary: true, unit: "mg"]) %>
+        <%= render_nutrient(assigns,
+            [label: "Vitamin A", weight: @serving["vitamin_a"], rdi: RDI.vitamin_a(@serving["vitamin_a"]), is_primary: true, unit: "mcg"]) %>
+        <%= render_nutrient(assigns,
+            [label: "Vitamin C", weight: @serving["vitamin_c"], rdi: RDI.vitamin_c(@serving["vitamin_c"]), is_primary: true, unit: "mg"]) %>
+
+      </tbody>
+    </table>
+  </section>
