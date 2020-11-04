@@ -33,7 +33,7 @@
   </tbody>
 </table>
 <br />
-<span><%= live_patch "New", to: Routes.user_index_path(@socket, :new), class: "font-black" %></span>
+<span><%= live_patch "Sign-up", to: Routes.users_sign_up_path(@socket, :signup), class: "font-black" %></span>
 </div>
 <%= if @live_action == :show do %>
   <div class="p-4 text-base " style="flex: 0 0 320px">

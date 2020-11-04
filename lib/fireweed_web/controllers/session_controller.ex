@@ -6,35 +6,31 @@ defmodule FireweedWeb.SessionController do
   # Uncommend these after configuring a mailer
   # alias Fireweed.Accounts.Email
   # alias Fireweed.Mail er
-
-  def new(conn, _) do
-    render(conn, "new.html", page_title: "Login")
+  def login(conn, _) do
+    render(conn, "login.html", page_title: "Sign-in")
   end
 
-  def create(conn, %{"user" => %{"email" => "", "password" => ""}}) do
+  def signin(conn, %{"user" => %{"email" => "", "password" => ""}}) do
     conn
-    |> put_flash(:error, "Please fill in an email address and password")
-    |> redirect(to: Routes.session_path(conn, :new))
+    # |> put_flash(:error, "Please fill in an email address and password")
+    |> redirect(to: Routes.session_path(conn, :login))
   end
 
-  def create(conn, %{"user" => %{"email" => email, "password" => password}}) do
+  def signin(conn, %{"user" => %{"email" => email, "password" => password}}) do
     case Accounts.authenticate_by_email_password(email, password) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "Welcome back!")
         |> put_session(:user_id, user.id)
         |> configure_session(renew: true)
         |> redirect(to: Routes.page_path(conn, :index))
 
       {:error, :unauthorized} ->
         conn
-        |> put_flash(:error, "Bad email/password combination")
-        |> redirect(to: Routes.session_path(conn, :new))
+        |> redirect(to: Routes.session_path(conn, :login))
 
       {:error, :not_found} ->
         conn
-        |> put_flash(:error, "Account not found")
-        |> redirect(to: Routes.session_path(conn, :new))
+        |> redirect(to: Routes.session_path(conn, :login))
     end
   end
 
@@ -42,15 +38,13 @@ defmodule FireweedWeb.SessionController do
     case Accounts.authenticate_by_email_token(email, token) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "Welcome back!")
         |> put_session(:user_id, user.id)
         |> configure_session(renew: true)
-        |> redirect(to: Routes.user_index_path(conn, :show))
+        |> redirect(to: Routes.page_path(conn, :index))
 
       _ ->
         conn
-        |> put_flash(:error, "Invalid login")
-        |> redirect(to: Routes.session_path(conn, :new))
+        |> redirect(to: Routes.session_path(conn, :signin))
     end
   end
 
@@ -113,7 +107,6 @@ defmodule FireweedWeb.SessionController do
   def delete(conn, _) do
     conn
     |> configure_session(drop: true)
-    |> put_flash(:success, "Successfully signed out")
     |> redirect(to: "/")
   end
 end

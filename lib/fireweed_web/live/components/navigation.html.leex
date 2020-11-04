@@ -23,7 +23,7 @@
     <section class="p-3 flex items-center text-nutrition border-t-1 border-black-light">
       <div class="text-base px-2 text-white-softer">
         <div class="text-white-softest">
-          <%= live_patch to: Routes.session_path(@socket, :new) do %>
+          <%= live_redirect to: Routes.session_path(@socket, :login) do %>
             <span class="font-flaticon flaticon-login"></span>
             <span>Login</span>
           <% end %>

@@ -1,11 +1,11 @@
 <%= Lib.logo %>
 <br />
-<div class="row">
-  <div class="col-sm-6 col-sm-offset-3 no-auto" style="--current-color:#cacaca">
-    <%= form_for @  conn, Routes.session_path(@conn, :create), [method: :post, as: :user], fn f -> %>
-      <div class="mb-2 text-primary">
+<div>
+  <div>
+    <%= form_for @  conn, Routes.session_path(@conn, :signin), [method: :post, as: :user], fn f -> %>
+      <div class="mb-2">
 
-        <%= text_input f, :email, placeholder: "Email", class: "border-1 border-secondary rounded-sm px-3 py-2 bg-black-light outline-none text-white-soft text-basic" %>
+        <%= text_input f, :email, type: "email", placeholder: "Email", class: "border-1 border-secondary rounded-sm px-3 py-2 bg-black-light outline-none text-white-soft text-basic" %>
       </div>
 
       <div class="mb-2">

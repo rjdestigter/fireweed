@@ -26,20 +26,23 @@ defmodule FireweedWeb.Router do
 
     live "/", PageLive, :index, @root
 
-    live "/users/new", UserLive.Index, :new
+    live "/signup", UsersLive.SignUp, :signup, @root
 
-    get("/forgot", SessionController, :forgot)
-    get("/login", SessionController, :new)
+    get("/signin", SessionController, :login)
+    post("/signin", SessionController, :signin)
+
     get("/login/:token/email/:email", SessionController, :create_from_token)
     get("/logout", SessionController, :delete)
+
+    get("/forgot", SessionController, :forgot)
     post("/forgot", SessionController, :reset_pass)
 
-    resources(
-      "/sessions",
-      SessionController,
-      only: [:new, :create, :delete],
-      singleton: true
-    )
+    # resources(
+    #   "/sessions",
+    #   SessionController,
+    #   only: [:new, :create, :delete],
+    #   singleton: true
+    # )
   end
 
 

@@ -1,0 +1,24 @@
+
+<section class="bg-black-dark flex-grow flex justify-center items-center">
+  <main>
+    <%= Lib.logo %>
+    <br />
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 no-auto" style="--current-color:#cacaca">
+        <%= f = form_for @changeset, "#",
+  id: "signup-form",
+  phx_change: "validate",
+  phx_submit: "save" %>
+        <div class="flex">
+        <div><%= UI.textfield f, :name, required: true, label: "Name", class: "mr-4" %></div>
+        <div><%= UI.emailfield f, :email, required: true, label: "Email", class: ""%></div>
+        </div>
+        <div class="flex">
+        <div><%= UI.newpasswordfield f, :password, required: true, label: "Password", class: "mr-4" %></div>
+        <div><%= UI.newpasswordfield f, :password_confirmation, required: true, label: "Confirm password" %></div>
+        </div>
+        <div><%= submit "Sign up", class: "px-3 py-2 rounded-sm border-2 border-white-soft hover:text-primary hover:border-primary outline-none" %></div>
+      </div>
+    </div>
+  </main>
+</section>

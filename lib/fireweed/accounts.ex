@@ -7,6 +7,7 @@ defmodule Fireweed.Accounts do
   alias Fireweed.Repo
 
   alias Fireweed.Accounts.User
+  alias Fireweed.Accounts.Token
 
   @topic inspect(__MODULE__)
 
@@ -21,10 +22,10 @@ defmodule Fireweed.Accounts do
   def unsubscribe do
     Phoenix.PubSub.unsubscribe(Fireweed.PubSub, @topic)
   end
-(
+
   def unsubscribe(user_id) do
     Phoenix.PubSub.unsubscribe(Fireweed.PubSub, @topic <> "#{user_id}")
-  end)
+  end
 
   @doc """
   Returns the list of users.
@@ -81,6 +82,12 @@ defmodule Fireweed.Accounts do
     |> User.registration_changeset(attrs)
     |> Repo.insert()
     |> notify_subscribers([:user, :created])
+  end
+
+  def create_token(attrs \\ %{}) do
+    %Token{}
+    |> Token.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -194,16 +201,31 @@ defmodule Fireweed.Accounts do
   returns a tuple pair with a status and either a user or an error atom
   """
   def authenticate_by_email_token(email, token) do
-    user = get_user_by_email(email)
+    tokens = get_tokens_by_email(email)
+    Fireweed.log("tokens", tokens)
 
     cond do
-      email in Reactor.Accounts.Email.banned() ->
+      email in Fireweed.Accounts.Email.banned() ->
         dummy_checkpw()
         {:error, :unauthorized}
 
-      user && user.login_token && checkpw(token, user.login_token) ->
-        update_login_token(user, nil)
-        {:ok, user}
+      tokens && length(tokens) > 0 ->
+        match = tokens |> Enum.find(fn t -> checkpw(token, t.token) end)
+
+        cond do
+          match ->
+            delete_token(match)
+
+            {:ok,
+             %User{
+               id: match.user_id,
+               email: email
+             }}
+
+          true ->
+            dummy_checkpw()
+            {:error, :unauthorized}
+        end
 
       true ->
         dummy_checkpw()
@@ -211,25 +233,16 @@ defmodule Fireweed.Accounts do
     end
   end
 
+  @spec get_user_by_email(any) :: any
   def get_user_by_email(email) do
     Repo.get_by(User, email: email)
   end
 
-  @doc """
-  Updates a user's login token.
+  def get_tokens_by_email(email) do
+    Repo.all(from t in Token, join: u in assoc(t, :users), where: u.email == ^email)
+  end
 
-  ## Examples
-
-      iex> update_login_token(user, valid_token)
-      {:ok, %User{}}
-
-      iex> update_login_token(user, invalid_token)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_login_token(%User{} = user, token) do
-    user
-    |> User.token_changeset(%{login_token: token})
-    |> Repo.update()
+  def delete_token(%{id: id}) do
+    Repo.delete(%Token{id: id})
   end
 end

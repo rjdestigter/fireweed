@@ -10,11 +10,11 @@ defmodule FireweedWeb.ErrorHelpers do
   """
   def error_tag(form, field, opts \\ []) do
     tag = Keyword.get(opts, :tag, :span)
-    class = Keyword.get(opts, :class, "invalid-feedback")
+    class = Keyword.get(opts, :class, "block px-1 py-2 text-xs text-red-400 leading-none ")
 
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
       content_tag(tag, translate_error(error), [
-        {:class, class},
+        {:class, "invalid-feedback " <> class},
         {:phx_feedback_for, input_id(form, field)}
         | opts
       ])

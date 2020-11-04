@@ -9,7 +9,9 @@
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
-  <body>
+  <body class="font-quicksand font-normal">
     <%= @inner_content %>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+    <%# <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;600;800&display=swap" rel="stylesheet"> %>
   </body>
 </html>

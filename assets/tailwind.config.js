@@ -6,11 +6,16 @@ module.exports = {
     "../**/live/**/*.ex",
     "./js/**/*.js",
   ],
+  variants: {
+    textColor: ["responsive", "hover", "focus", "focus-within"],
+  },
   theme: {
     extend: {
       fontFamily: {
         nutrition: ["Arial", "Helvetica", "sans-serif"],
         flaticon: ["Flaticon"],
+        quicksand: ["Quicksand", "sans-serif"],
+        roboto: ["Roboto Slab", "sans-serif"],
       },
       borderWidth: {
         1: "1px",
@@ -27,6 +32,10 @@ module.exports = {
         secondary: "rgb(10, 255, 216)",
         "nutrition-grey": "#9e9e9e",
         nutrition: "#cccccc",
+        textfield: {
+          label: "#676767",
+          border: "#383838",
+        },
         white: {
           hard: "#000000",
           soft: "#cccccc",
@@ -34,13 +43,12 @@ module.exports = {
           softest: "#6f6f6f",
         },
         black: {
-          dark: "#1f1f1f",
+          dark: "#131001",
           medium: "#282828",
           light: "#323232",
         },
       },
     },
   },
-  variants: {},
   plugins: [],
 };
