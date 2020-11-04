@@ -4,10 +4,7 @@ defmodule FireweedWeb.Auth do
   alias FireweedWeb.Router.Helpers, as: Routes
   alias Fireweed.Accounts
 
-  @site_admins ~w[
-    # add email addresses of site admins here
-    alchemist.camp@gmail.com
-  ]
+  @site_admins ~w[johndestigter@gmail.com]
 
   def init(opts), do: opts
 

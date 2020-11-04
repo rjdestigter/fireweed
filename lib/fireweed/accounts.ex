@@ -18,6 +18,14 @@ defmodule Fireweed.Accounts do
     Phoenix.PubSub.subscribe(Fireweed.PubSub, @topic <> "#{user_id}")
   end
 
+  def unsubscribe do
+    Phoenix.PubSub.unsubscribe(Fireweed.PubSub, @topic)
+  end
+(
+  def unsubscribe(user_id) do
+    Phoenix.PubSub.unsubscribe(Fireweed.PubSub, @topic <> "#{user_id}")
+  end)
+
   @doc """
   Returns the list of users.
 
@@ -87,7 +95,7 @@ defmodule Fireweed.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user(%User{} = user, attrs) do
+  def update_user(%User{} = user, attrs \\ %{}) do
     changeset =
       if attrs["password"] == "" || attrs["password"] == nil do
         &User.changeset/2
@@ -131,9 +139,8 @@ defmodule Fireweed.Accounts do
     |> notify_subscribers([:user, :deleted])
   end
 
+  @spec change_user(Fireweed.Accounts.User.t(), nil | maybe_improper_list | map) :: any
   def change_user(%User{} = user, attrs \\ %{}) do
-    IO.inspect(user)
-    IO.inspect(attrs)
     changeset =
       if attrs["password"] == "" do
         &User.changeset/2

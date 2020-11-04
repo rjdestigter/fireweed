@@ -1,0 +1,54 @@
+<%= live_component(@socket, Components.Navigation, id: :navigation, page: :users, current_user: @current_user, admin_user: @admin_user)%>
+<section>
+  <div class="flex-grow flex-shrink p-6">
+    <h1 class="text-4xl mb    -4">Users</h1>
+    <br />
+    <table class="text-left text-base">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Verified</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="users">
+        <%= for user <- @users do %>
+          <tr id="user-<%= user.id %>" class="border-b-1 border-white-softest">
+        <td class="py-2"><span class="text-lg font-black font-flaticon flaticon-user px-2 <%= FireweedWeb.Auth.is_admin?(user) && "text-primary" || "text-white-softer" %>"></span><%= user.name %></td>
+        <td class="py-2"><%= user.email %></td>
+        <td class="py-2"><input type="checkbox" readonly onclick="return false;" <%= user.is_verified && ~S(checked="checked") %> /></td>
+        <td>
+          <span class="px-1 pt-1"><%= live_patch to: Routes.users_index_path(@socket, :show, user) do %>
+            <span class="text-lg font-black font-flaticon flaticon-pencil hover:text-secondary"></span>
+            <% end %>
+          </span>
+          <span class="px-1"><%= link to: "#", phx_click: "delete", phx_value_id: user.id, data: [confirm: "Are you sure?"] do %>
+            <span class="text-lg font-black font-flaticon flaticon-trash-can hover:text-secondary"></span>
+            <% end %>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br />
+<span><%= live_patch "New", to: Routes.user_index_path(@socket, :new), class: "font-black" %></span>
+</div>
+<%= if @live_action == :show do %>
+  <div class="p-4 text-base " style="flex: 0 0 320px">
+    <%= f = form_for @changeset, "#",
+  id: "user-form",
+  phx_change: "validate",
+  phx_submit: "save" %>
+
+    <%= text_input f, :name, class: "border-2 border-primary border-opacity-50 rounded px-4 py-2 text-white-soft py-1 bg-transparent bg-black-medium outline-none", placeholder: "Name", autofocus: "true" %>
+    <%= error_tag f, :name, class: "px-1 py-2 text-xs text-red-600 block" %>
+    <br />
+    <br />
+    <%= text_input f, :email, type: "email", class: "border-2 border-primary border-opacity-50 rounded px-4 py-2 text-white-soft py-1 bg-transparent bg-black-medium outline-none", placeholder: "Email" %>
+    <%= error_tag f, :email, class: "px-1 py-2 text-xs text-red-600 block" %>
+  </form>
+</div>
+<% end %>
+</section>

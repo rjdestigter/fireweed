@@ -1,0 +1,164 @@
+defmodule FireweedWeb.UsersLive.Index do
+  use FireweedWeb, :live_view
+  alias FireweedWeb.Components
+  alias Fireweed.Accounts
+  alias Fireweed.Accounts.User
+
+  @withuser %{assigns: %{current_user: %{}}}
+
+  @impl true
+  def mount(_params, %{"user_id" => user_id}, socket) do
+    # test
+    if connected?(socket), do: Accounts.subscribe()
+    current_user = Fireweed.Accounts.get_user!(user_id)
+    admin_user = FireweedWeb.Auth.is_admin?(current_user)
+
+    {:ok,
+     socket
+     |> assign(
+       current_user: current_user,
+       admin_user: admin_user,
+       user: nil,
+       users: list_users()
+     )}
+  end
+
+  @impl true
+  def mount(_params, _session, socket) do
+    {:ok, socket |> push_redirect(FireweedWeb.Router.Helpers.page_path(:index))}
+  end
+
+  @impl true
+  def handle_params(params, _uri, socket = @withuser) do
+    {:noreply, socket |> apply_action(socket.assigns.live_action, params)}
+  end
+
+  @impl true
+  def handle_params(_params, _uri, socket) do
+    socket = cleanup(socket)
+    {:ok, socket |> push_redirect(FireweedWeb.Router.Helpers.page_path(:index))}
+  end
+
+  defp cleanup(%{assigns: %{user: %{id: id}}} = socket) do
+    Accounts.unsubscribe(id)
+    socket |> assign(user: nil)
+  end
+
+  defp cleanup(socket), do: socket
+
+  defp apply_action(socket, :show, %{"id" => id}) do
+    if connected?(socket), do: Accounts.subscribe(id)
+
+    user = Accounts.get_user!(id)
+
+    socket
+    |> assign(:page_title, "Show User")
+    |> assign(:user, user)
+    |> assign(:changeset, Accounts.change_user(user))
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    if connected?(socket), do: Accounts.subscribe(id)
+
+    socket
+    |> assign(:page_title, "Edit User")
+    |> assign(:user, Accounts.get_user!(id))
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:page_title, "New User")
+    |> assign(:user, %User{})
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Listing Users")
+    |> assign(:user, nil)
+  end
+
+  @impl true
+  def handle_event("validate", %{"user" => %{ "password" => _ }}, socket) do
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("validate", %{"user" => user_params}, socket) do
+    send(self(), {:save, user_params})
+
+    changeset =
+      socket.assigns.user
+      |> Accounts.change_user(user_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+
+
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    user = Accounts.get_user!(id)
+    {:ok, _} = Accounts.delete_user(user)
+
+    {:noreply, assign(socket, :users, list_users())}
+  end
+
+  # def handle_event("save", %{"user" => user_params}, socket) do
+  #   save_user(socket, socket.assigns.action, user_params)
+  # end
+
+  defp save_user(socket, :edit, user_params) do
+    case Accounts.update_user(socket.assigns.user, user_params) do
+      {:ok, _user} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User updated successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :changeset, changeset)}
+    end
+  end
+
+  defp save_user(socket, :new, user_params) do
+    case Accounts.create_user(user_params) do
+      {:ok, _user} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User created successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  defp list_users do
+    Accounts.list_users()
+  end
+
+  defp fetch(socket) do
+    assign(socket, users: list_users())
+  end
+
+  @impl true
+  def handle_info({Accounts, [:user, _], user = %User{}}, socket) do
+    user = (socket.assigns.user && user) || nil
+    changeset = Accounts.change_user(user || %{})
+
+    {:noreply, fetch(socket) |> assign(user: user, changeset: changeset)}
+  end
+
+  @impl true
+  def handle_info({Accounts, [:user, _], result}, socket) do
+    Fireweed.log("Result", result)
+    {:noreply, fetch(socket)}
+  end
+
+  @impl true
+  def handle_info({:save, user}, socket) do
+    Accounts.update_user(socket.assigns.user, user)
+    {:noreply, socket}
+  end
+end

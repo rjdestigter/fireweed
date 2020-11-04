@@ -3,7 +3,7 @@ defmodule FireweedWeb.TopAppBarLive do
   alias Fireweed.Accounts
 
   @impl true
-  def mount(params, %{"user_id" => user_id, "page_title" => page_title} = session, socket) do
+  def mount(_params, %{"user_id" => user_id, "page_title" => page_title}, socket) do
     current_user = Accounts.get_user!(user_id)
     admin_user = FireweedWeb.Auth.is_admin?(current_user)
 

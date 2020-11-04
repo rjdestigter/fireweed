@@ -45,7 +45,7 @@ defmodule FireweedWeb.SessionController do
         |> put_flash(:info, "Welcome back!")
         |> put_session(:user_id, user.id)
         |> configure_session(renew: true)
-        |> redirect(to: Routes.user_index_path(conn, FireweedWeb.UserLive.Show))
+        |> redirect(to: Routes.user_index_path(conn, :show))
 
       _ ->
         conn

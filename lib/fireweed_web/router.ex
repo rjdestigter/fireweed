@@ -1,5 +1,6 @@
 defmodule FireweedWeb.Router do
   @root [id: "root", container: {:div, [{"data-root", ""}]}]
+
   use FireweedWeb, :router
 
   pipeline :browser do
@@ -25,8 +26,6 @@ defmodule FireweedWeb.Router do
 
     live "/", PageLive, :index, @root
 
-
-
     live "/users/new", UserLive.Index, :new
 
     get("/forgot", SessionController, :forgot)
@@ -47,13 +46,16 @@ defmodule FireweedWeb.Router do
   scope "/", FireweedWeb do
     pipe_through [:browser, :protected]
 
-    live "/nutrition/", PageLive, :nutrition, @root
-    live "/nutrition/:food_id", PageLive, :nutrition_detail, @root
+    live "/nutrition/", NutritionLive.Index, :index, @root
+    live "/nutrition/:food_id", NutritionLive.Index, :show, @root
 
-    live "/users", UserLive.Index, :index
-    live "/users/:id", UserLive.Show, :show
-    live "/users/:id/edit", UserLive.Index, :edit
-    live "/users/:id/show/edit", UserLive.Show, :edit
+    live "/heartrate/", HeartRateLive.Index, :index, @root
+
+    live "/map/", MapLive.Index, :index, @root
+
+    live "/users", UsersLive.Index, :index, @root
+    live "/users/:id", UsersLive.Index, :show, @root
+    live "/users/:id/edit", UsersLive.Index, :edit, @root
   end
 
   # Other scopes may use custom stacks.

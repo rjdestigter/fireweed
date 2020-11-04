@@ -17,8 +17,23 @@ import {Socket} from "phoenix"
 import NProgress from "nprogress"
 import {LiveSocket} from "phoenix_live_view"
 
+let Hooks = {};
+Hooks.ContentEditable = {
+  mounted() {
+    let form = this.el.closest("form");
+    let targetInput = form.querySelector(`[name="${this.el.dataset.name}"]`);
+    this.el.addEventListener("input", (e) => {
+      // push event to the server
+      // this.pushEvent("update_event", {content: this.el.innerText})
+      // or copy to hidden input and trigger parent form event
+      targetInput.value = this.el.innerText;
+      targetInput.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  },
+};
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}})
 
 // Show progress bar on live navigation and form submits
 window.addEventListener("phx:page-loading-start", info => NProgress.start())

@@ -39,7 +39,7 @@ module.exports = (env, options) => {
           use: [
             MiniCssExtractPlugin.loader,
             "css-loader",
-             "postcss-loader",
+            "postcss-loader",
             {
               loader: "sass-loader",
               options: {
@@ -47,6 +47,14 @@ module.exports = (env, options) => {
                   includePaths: [path.resolve(__dirname, "node_modules")],
                 },
               },
+            },
+          ],
+        },
+        {
+          test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [
+            {
+              loader: "file-loader",
             },
           ],
         },

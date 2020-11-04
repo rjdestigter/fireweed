@@ -1,10 +1,11 @@
 @mixin icon-button {
-  > button {
-      font-size: 12 /16 * 1em;
+  > button,
+  > a {
+    font-size: 12 /16 * 1em;
     @content;
-    padding: 8px 16px;
+    padding: 4px 16px;
 
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: flex-start;
 
@@ -13,14 +14,13 @@
     color: #f5f5f5;
     border-radius: 9999px;
     outline: none;
-
     transition: background 0.2s;
 
     img {
       padding-right: 8px;
       filter: invert(90%);
-      width: 1.8rem;
-      height: 1.8rem;
+      width: 1.6rem;
+      height: 1.6rem;
     }
 
     span {
@@ -29,19 +29,31 @@
   }
 
   &[data-active="true"] {
-    > button {
-      background: rgb(2, 0, 36);
+    > button,
+    > a {
+      color: #333;
+      background: rgb(255, 216, 21);
       background: linear-gradient(
         90deg,
-        rgb(17, 185, 85) 0%,
-        rgba(9, 121, 112, 1) 100%
+        rgb(10, 255, 216) 0%,
+        rgb(255, 216, 21) 100%
       );
+
+      img {
+        filter: invert(0);
+      }
     }
   }
 
-  &:hover:not([data-active]) {
-    > button {
-      background: rgb(17, 185, 85);
+  &:hover:not([data-active="true"]) {
+    > button,
+    > a {
+      background: rgb(255, 216, 21);
+      color: #333;
+
+      img {
+        filter: invert(0);
+      }
     }
   }
 }

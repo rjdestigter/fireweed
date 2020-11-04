@@ -1,0 +1,34 @@
+<nav class="flex flex-col">
+  <%= render_menus(assigns) %>
+  <div class="flex-grow flex-shrink"></div>
+  <%= if @current_user do %>
+    <section class="p-3 flex items-center text-nutrition border-t-1 border-black-light">
+      <div class="rounded-full bg-black-light" style="width:40px;height:40px">
+        <div class="rounded-full bg-primary" style="width:10px;height:10px;left:1px;top:1px">
+        </div>
+      </div>
+      <div class="text-sm px-2 text-white-softer">
+        <span class="font-bold"><%= @current_user.name %></span><br />
+        <%= @current_user.email %>
+        <div class="text-white-softest">
+          <%= live_patch to: Routes.session_path(@socket, :delete) do %>
+            <span class="font-flaticon flaticon-logout"></span>
+            <span>Logout</span>
+          <% end %>
+        </div>
+      </div>
+    </section>
+  <% end %>
+  <%= if !@current_user do %>
+    <section class="p-3 flex items-center text-nutrition border-t-1 border-black-light">
+      <div class="text-base px-2 text-white-softer">
+        <div class="text-white-softest">
+          <%= live_patch to: Routes.session_path(@socket, :new) do %>
+            <span class="font-flaticon flaticon-login"></span>
+            <span>Login</span>
+          <% end %>
+        </div>
+      </div>
+    </section>
+  <% end %>
+</nav>
