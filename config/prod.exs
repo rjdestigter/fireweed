@@ -12,6 +12,8 @@ use Mix.Config
 config :fireweed, FireweedWeb.Endpoint,
   url: [host: "example.com", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
+  check_origin: false,
+
 
 # Do not print debug messages in production
 config :logger, level: :info
