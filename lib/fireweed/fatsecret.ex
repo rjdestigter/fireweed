@@ -13,6 +13,11 @@ defmodule FatSecret do
   end
 
   @impl true
+  def handle_call(:logout, _from, _state) do
+    {:reply, :anonymous, :anonymous}
+  end
+
+  @impl true
   def handle_call(_, _from, {:authenticated, _} = state) do
     {:reply, state, state}
   end
@@ -21,6 +26,10 @@ defmodule FatSecret do
   def handle_call(:authenticate, _from, _state) do
     state = login()
     {:reply, state, state}
+  end
+
+  def logout do
+    GenServer.call(__MODULE__, :logout)
   end
 
   def get_access_token do
@@ -101,7 +110,9 @@ defmodule FatSecret do
              ]) do
           {:ok, response} ->
             case Poison.decode(response.body) do
-              {:ok, %{"error" => %{"code" => 13}}} -> "Oops"
+              {:ok, %{"error" => %{"code" => 13}}} ->
+                  logout()
+                  get(url)
               ok -> ok
             end
 
