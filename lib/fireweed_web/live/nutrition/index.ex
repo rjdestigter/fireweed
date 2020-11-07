@@ -45,7 +45,7 @@ defmodule FireweedWeb.NutritionLive.Index do
   end
 
   def apply_action(socket, :index, _params) do
-    socket |> assign(page_title: "Nutrition")
+    socket |> assign(page_title: "Nutrition", food: nil)
   end
 
   def apply_action(socket, :show, %{"food_id" => food_id}) do
@@ -101,6 +101,16 @@ defmodule FireweedWeb.NutritionLive.Index do
           """
       end
 
+    search_class = case assigns.food do
+      nil -> "flex w-full md:w-2/5"
+      _ -> "hidden md:flex"
+    end
+
+    servings_class = case assigns.food do
+      nil -> "hidden md:block"
+      _ -> ""
+    end
+
     ~H"""
     <Navigation
       page={{:nutrition}}
@@ -108,7 +118,7 @@ defmodule FireweedWeb.NutritionLive.Index do
       admin_user={{@admin_user}}
     />
     <section>
-      <div style="flex: 0 0 320px">
+      <div class={{search_class}}>
         <section>
           <form :on-change="search" onsubmit="return false;">
             <input type="text" placeholder="Search for foods" aria-label="Search for foods" phx-debounce="250" name="query" value="{{@query}}" />
@@ -118,7 +128,7 @@ defmodule FireweedWeb.NutritionLive.Index do
           <SearchResponse foods={{@foods}} food_id={{@food_id}} />
         </section>
       </div>
-       <div>
+       <div class={{servings_class}}>
       <section>{{detail}}</section>
     </div>
     </section>

@@ -29,6 +29,8 @@ button,
   display: flex;
 
   > nav {
+    display: flex;
+    flex-direction: column;
     background-color: #1f1f1f;
     padding-top: 16px;
     flex: 0 0 auto;
@@ -45,6 +47,37 @@ button,
       }
     }
 
+
+    @media screen and (max-width: 450px) {
+      position: absolute;
+      z-index: 1;
+      bottom: 0;
+      width: 100%;
+      flex-direction: row;
+      overflow: auto;
+      padding-top: 0;
+
+      h3 {
+        display: none;
+      }
+
+      > ul {
+        display: flex;
+        margin-bottom: 0;
+
+        > li {
+          display: flex;
+          align-items: center;
+          padding: 0 16px;
+          min-height: 48px;
+
+          span {
+            padding-right: 1rem;
+          }
+        }
+      }
+    }
+
     + section {
       display: flex;
       flex: 1 1 auto;
@@ -53,7 +86,7 @@ button,
         background-color: #323232;
         overflow: auto;
         &:first-child {
-          display: flex;
+          // display: flex;
           flex-direction: column;
           background-color: #282828;
 

@@ -32,7 +32,7 @@ defmodule FireweedWeb.Components.Navigation do
     menus = @menus
 
     ~H"""
-      <nav class="flex flex-col">
+      <nav>
         <Menu
           :for={{ {label, items, access} <- menus}}
           label={{label}}
