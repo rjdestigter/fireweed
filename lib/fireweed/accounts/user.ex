@@ -19,9 +19,10 @@ defmodule Fireweed.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:name, :email, :is_verified])
-    |> validate_required([:name, :email])
-    |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email)
+    |> validate_required([:name, :email], message: "This field is required.")
+    |> validate_format(:email, ~r/@/, message: "Please provide a valid email address.")
+    |> validate_format(:email, ~r/^[^\s]+$/, message: "Please provide a valid email address.")
+    |> unique_constraint(:email, message: "Not available")
   end
 
   def registration_changeset(struct, attrs \\ %{}) do

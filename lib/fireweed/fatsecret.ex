@@ -2,7 +2,6 @@ defmodule FatSecret do
   # @access_token "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjEzRTFGRDgwMTQ0Q0IwQTI4NDRFMzI4REZCNUU4NTQyRDE0QUI2RUYiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJFLUg5Z0JSTXNLS0VUaktOLTE2RlF0Rkt0dTgifQ.eyJuYmYiOjE2MDQxODI1MzksImV4cCI6MTYwNDI2ODkzOSwiaXNzIjoiaHR0cHM6Ly9vYXV0aC5mYXRzZWNyZXQuY29tIiwiYXVkIjoiYmFzaWMiLCJjbGllbnRfaWQiOiJjMTRlYmM5ZmMxNTE0YWI3ODE0NDgxY2E5NzY4MDE2YiIsInNjb3BlIjpbImJhc2ljIl19.X3u1MK4KR_kIKaW3Z8nwZzUML3jPlMuZrsHCyHBePO2OkOy4AvBcnWX6ETf7xEKC4uw_qZD7kjDJXaTVQHv93aYSM1eAI376p3BoDB_sDB-wpKkaEMzlRHCPdXcS4HPc5iAiffIwXcwcu_BPKUw5SePz_sOs0_X5fNSVOJjFdkJxPDSzJgdkVGEbHm36mJQmKcQrlPeDOI8UFpmC_5BLbv3POTpfz895dexcHZ9rVENcFidXHZcJZ7BWNeu5n6D8gH6rVgt3VbRVup8uwwWWeVkyPo8dLy7pkRf7x6JkXnao6-LjgRb9lFVw8DvzTRRLkfmQdTzIWX4cmZBmlAOk3A"
   @api "https://platform.fatsecret.com/rest/server.api"
 
-
   use GenServer
 
   def start_link(_) do
@@ -32,13 +31,44 @@ defmodule FatSecret do
   def search(term) do
     url = @api <> "?search_expression=#{term}&method=foods.search&max_results=50&format=json"
 
-    get(url)
+    case get(url) do
+      {:ok, %{"foods" => %{"total_results" => "0"}}} ->
+        :noresults
+
+      {:ok, %{"foods" => %{"total_results" => total, "page_number" => page, "food" => food}}}
+      when is_map(food) ->
+        {:ok, [food], [total: total, page: page]}
+
+      {:ok, %{"foods" => %{"total_results" => total, "page_number" => page, "food" => food}}}
+      when is_list(food) ->
+        {:ok, food, [total: total, page: page]}
+
+      {:ok, data} ->
+        {:baddata, data}
+
+      other ->
+        other
+    end
   end
 
   def food_get_v2(food_id) do
     url = @api <> "?food_id=#{food_id}&method=food.get.v2&format=json"
 
-    get(url)
+    case get(url) do
+      {:ok, %{"food" => food}} ->
+        {
+          :ok,
+          case food do
+            %{"servings" => %{ "serving" => servings}} when is_map(servings) ->
+              food |> Map.delete("servings") |> Map.put("servings", [servings])
+            %{"servings" => %{ "serving" => servings}} when is_list(servings) ->
+              food |> Map.delete("servings") |> Map.put("servings", servings)
+          end
+        }
+
+      other ->
+        other
+    end
   end
 
   def login() do
@@ -71,10 +101,17 @@ defmodule FatSecret do
                {"Authorization", access_token}
              ]) do
           {:ok, response} ->
-            {:ok, Poison.decode(response.body)}
-          error -> error
+            case Poison.decode(response.body) do
+              {:ok, %{"error" => %{"code" => 13}}} -> "Oops"
+              ok -> ok
+            end
+
+          error ->
+            error
         end
-      access_token -> access_token
+
+      access_token ->
+        access_token
     end
   end
 end

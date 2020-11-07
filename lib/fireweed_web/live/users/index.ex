@@ -1,31 +1,39 @@
 defmodule FireweedWeb.UsersLive.Index do
-  use FireweedWeb, :live_view
-  alias FireweedWeb.Components
+  use FireweedWeb, :surface_live_view
+  # alias FireweedWeb.Components
   alias Fireweed.Accounts
   alias Fireweed.Accounts.User
+  alias FireweedWeb.UsersLive.Components.{List, EditUser}
 
   @withuser %{assigns: %{current_user: %{}}}
 
+  prop current_user, :any, required: true
+  prop admin_user, :boolean, required: true
+
+  data user, :any
+  data users, :list, default: []
+  data changeset, :any
+
   @impl true
   def mount(_params, %{"user_id" => user_id}, socket) do
-    # test
     if connected?(socket), do: Accounts.subscribe()
+
     current_user = Fireweed.Accounts.get_user!(user_id)
     admin_user = FireweedWeb.Auth.is_admin?(current_user)
-
+    users = list_users()
     {:ok,
      socket
      |> assign(
        current_user: current_user,
        admin_user: admin_user,
        user: nil,
-       users: list_users()
+       users: users
      )}
   end
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket |> push_redirect(FireweedWeb.Router.Helpers.page_path(:index))}
+    {:ok, push_redirect(socket, FireweedWeb.Router.Helpers.page_path(socket, :index))}
   end
 
   @impl true
@@ -36,7 +44,7 @@ defmodule FireweedWeb.UsersLive.Index do
   @impl true
   def handle_params(_params, _uri, socket) do
     socket = cleanup(socket)
-    {:ok, socket |> push_redirect(FireweedWeb.Router.Helpers.page_path(:index))}
+    {:ok, push_redirect(socket, FireweedWeb.Router.Helpers.page_path(socket, :index))}
   end
 
   defp cleanup(%{assigns: %{user: %{id: id}}} = socket) do
@@ -89,12 +97,10 @@ defmodule FireweedWeb.UsersLive.Index do
     changeset =
       socket.assigns.user
       |> Accounts.change_user(user_params)
-      |> Map.put(:action, :validate)
+      # |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
-
-
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
@@ -102,36 +108,6 @@ defmodule FireweedWeb.UsersLive.Index do
     {:ok, _} = Accounts.delete_user(user)
 
     {:noreply, assign(socket, :users, list_users())}
-  end
-
-  # def handle_event("save", %{"user" => user_params}, socket) do
-  #   save_user(socket, socket.assigns.action, user_params)
-  # end
-
-  defp save_user(socket, :edit, user_params) do
-    case Accounts.update_user(socket.assigns.user, user_params) do
-      {:ok, _user} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "User updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
-  end
-
-  defp save_user(socket, :new, user_params) do
-    case Accounts.create_user(user_params) do
-      {:ok, _user} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "User created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
   end
 
   defp list_users do
@@ -151,14 +127,38 @@ defmodule FireweedWeb.UsersLive.Index do
   end
 
   @impl true
-  def handle_info({Accounts, [:user, _], result}, socket) do
-    Fireweed.log("Result", result)
+  def handle_info({Accounts, [:user, _], _result}, socket) do
     {:noreply, fetch(socket)}
   end
 
   @impl true
   def handle_info({:save, user}, socket) do
-    Accounts.update_user(socket.assigns.user, user)
+     socket = case Accounts.update_user(socket.assigns.user, user) do
+      {:error, changeset} -> socket |> assign(changeset: changeset)
+      _ -> socket
+     end
+
     {:noreply, socket}
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <Navigation
+      page={{:users}}
+      current_user={{@current_user}}
+      admin_user={{@admin_user}}
+    />
+    <section>
+      <div class="flex-grow flex-shrink p-6">
+        <h1 class="text-4xl mb    -4">Users</h1>
+        <br />
+        <List users={{@users}} />
+      </div>
+      <Cond visible={{@live_action == :show}}>
+        <EditUser changeset={{@changeset}} />
+      </Cond>
+    </section>
+    """
   end
 end

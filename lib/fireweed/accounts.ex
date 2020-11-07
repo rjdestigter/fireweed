@@ -202,7 +202,6 @@ defmodule Fireweed.Accounts do
   """
   def authenticate_by_email_token(email, token) do
     tokens = get_tokens_by_email(email)
-    Fireweed.log("tokens", tokens)
 
     cond do
       email in Fireweed.Accounts.Email.banned() ->

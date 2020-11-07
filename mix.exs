@@ -37,7 +37,7 @@ defmodule Fireweed.MixProject do
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_live_view, "~> 0.14.8"},
+      # {:phoenix_live_view, "~> 0.14.8"},
       {:floki, ">= 0.27.0", only: :test},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
@@ -53,6 +53,8 @@ defmodule Fireweed.MixProject do
       {:httpoison, "~> 1.6"},
       {:poison, "~> 3.1"},
       {:envy, "~> 1.1.1"},
+      {:phoenix_live_view, git: "https://github.com/phoenixframework/phoenix_live_view.git", tag: "f986171cae03747366c3cd1c4f4fea047e1d7196", override: true},
+      {:surface, git: "https://github.com/msaraiva/surface.git", tag: "v0.1.0-rc.2", override: true}
     ]
   end
 

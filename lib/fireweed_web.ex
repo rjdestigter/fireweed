@@ -51,9 +51,34 @@ defmodule FireweedWeb do
     end
   end
 
+  def surface_live_view do
+    quote do
+      use Surface.LiveView,
+        layout: {FireweedWeb.LayoutView, "live.html"}
+
+      unquote(surface_view_helpers())
+    end
+  end
+
   def live_component do
     quote do
       use Phoenix.LiveComponent
+
+      unquote(view_helpers())
+    end
+  end
+
+  def surface_component do
+    quote do
+      use Surface.Component
+
+      unquote(surface_view_helpers())
+    end
+  end
+
+  def surface_live_component do
+    quote do
+      use Surface.LiveComponent
 
       unquote(view_helpers())
     end
@@ -92,6 +117,39 @@ defmodule FireweedWeb do
       import FireweedWeb.ErrorHelpers
       import FireweedWeb.Gettext
       alias FireweedWeb.Router.Helpers, as: Routes
+
+      # import Surface.Components
+    end
+  end
+
+  defp surface_view_helpers do
+    quote do
+      # Use all HTML functionality (forms, tags, etc)
+      use Phoenix.HTML
+
+      # Import LiveView helpers (live_render, live_component, live_patch, etc)
+      import Phoenix.LiveView.Helpers
+      import FireweedWeb.LiveHelpers
+
+      # Import basic rendering functionality (render, render_layout, etc)
+      # import Phoenix.View
+      alias Surface.Components.Context
+      alias Surface.Components.Form
+      alias Surface.Components.Link
+      alias Surface.Components.LivePatch
+      alias Surface.Components.LiveRedirect
+      alias Surface.Components.Markdown
+      alias Surface.Components.Raw
+
+      import FireweedWeb.ErrorHelpers
+      import FireweedWeb.Gettext
+      alias FireweedWeb.Router.Helpers, as: Routes
+
+      alias FireweedWeb.Components.{UnderConstruction, Navigation, Logo, UI, Cond}
+      alias FireweedWeb.Components.UI.{Textfield, Label}
+      alias Surface.Components.Form
+      alias Surface.Components.Form.{Field}
+      # import Surface.Components
     end
   end
 

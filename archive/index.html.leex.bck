@@ -1,0 +1,27 @@
+<%= live_component(@socket, Components.Navigation, id: :navigation, page: :nutrition, current_user: @current_user, admin_user: @admin_user)%>
+<section>
+  <div style="flex: 0 0 320px">
+    <section>
+      <form phx-change="search" onsubmit="return false;">
+        <input type="text" placeholder="Search for foods" aria-label="Search for foods" phx-debounce="250" name="query" value="<%= @query %>" />
+      </form>
+    </section>
+    <section>
+      <%= Nutrition.SearchResponse.render(assigns) %>
+
+    </section>
+  </div>
+  <%= if @food do %>
+    <div>
+      <section>
+        <%=
+          case @food do
+            {:ok, food} -> Nutrition.Servings.render(Map.put(assigns, :food, food))
+            :fetching -> "Busy..."
+            _ -> "Oops!"
+          end
+        %>
+      </section>
+    </div>
+  <% end %>
+</section>

@@ -1,8 +1,16 @@
 defmodule FireweedWeb.NutritionLive.Index do
   @withuser %{assigns: %{current_user: %{}}}
 
-  use FireweedWeb, :live_view
-  alias FireweedWeb.Components
+  use FireweedWeb, :surface_live_view
+  alias FireweedWeb.Nutrition.Components.{SearchResponse,Servings}
+
+  prop current_user, :any, required: true
+  prop admin_user, :boolean, required: true
+
+  data foods, :any
+  data food_id, :integer
+  data food, :any
+  data query, :string, default: ""
 
   @impl true
   def mount(_params, %{"user_id" => user_id}, socket) do
@@ -15,7 +23,7 @@ defmodule FireweedWeb.NutritionLive.Index do
        current_user: current_user,
        admin_user: admin_user,
        query: "",
-       foods: [],
+       foods: :idle,
        food: nil,
        food_id: nil
      )}
@@ -42,7 +50,7 @@ defmodule FireweedWeb.NutritionLive.Index do
 
   def apply_action(socket, :show, %{"food_id" => food_id}) do
     send(self(), {:fetch, food_id})
-    socket |> assign(page_title: "Nutrition: #{food_id}")
+    socket |> assign(food: :fetching, page_title: "Nutrition: #{food_id}", food: :fetching)
   end
 
   def apply_action(socket, _action, _params) do
@@ -53,7 +61,7 @@ defmodule FireweedWeb.NutritionLive.Index do
   def handle_event("search", %{"query" => query}, socket) do
     send(self(), {:search, query})
 
-    {:noreply, socket |> assign(query: query)}
+    {:noreply, socket |> assign(query: query, foods: :searching)}
   end
 
   @impl true
@@ -63,32 +71,57 @@ defmodule FireweedWeb.NutritionLive.Index do
 
   @impl true
   def handle_info({:search, query}, socket) do
-    foods =
-      case FatSecret.search(query) do
-        {:ok, {:ok, %{"foods" => %{"food" => food}}}} ->
-          food
-
-        _ ->
-          []
-      end
+    foods = FatSecret.search(query)
 
     {:noreply, socket |> assign(:foods, foods)}
   end
 
   def handle_info({:fetch, food_id}, socket) do
-    socket =
-      case FatSecret.food_get_v2(food_id) do
-        {:ok, {:ok, %{"food" => food}}} ->
-          socket
-          |> assign(
-            page_title: "Nutrition - #{food["food_name"]}",
-            food: food
-          )
+    {:noreply, socket |> assign(food: FatSecret.food_get_v2(food_id))}
+  end
 
-        error ->
-          socket |> assign(error: error)
+  @impl true
+  def render(assigns) do
+    detail =
+      case assigns.food do
+        nil -> ~H""
+        {:ok, food} ->
+          ~H"""
+            <Servings food={{food}} />
+          """
+
+        :fetching ->
+          ~H"""
+            <span>Cooking up a storm...</span>
+          """
+
+        _ ->
+          ~H"""
+          <span>An unexped error has occurred.</span>
+          """
       end
 
-    {:noreply, socket}
+    ~H"""
+    <Navigation
+      page={{:nutrition}}
+      current_user={{@current_user}}
+      admin_user={{@admin_user}}
+    />
+    <section>
+      <div style="flex: 0 0 320px">
+        <section>
+          <form :on-change="search" onsubmit="return false;">
+            <input type="text" placeholder="Search for foods" aria-label="Search for foods" phx-debounce="250" name="query" value="{{@query}}" />
+          </form>
+        </section>
+        <section>
+          <SearchResponse foods={{@foods}} food_id={{@food_id}} />
+        </section>
+      </div>
+       <div>
+      <section>{{detail}}</section>
+    </div>
+    </section>
+    """
   end
 end

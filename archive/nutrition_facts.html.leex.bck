@@ -7,7 +7,7 @@
         </th>
       </tr>
       <tr>
-        <th class="text-sm border-b-11 border-nutrition-grey pb-2    pt-4 align-top">Serving Size</th>
+        <th class="text-sm border-b-11 border-nutrition-grey pb-2 pt-4 align-top">Serving Size</th>
         <th class="text-sm border-b-11 border-nutrition-grey pb-2 pt-4 align-top text-right"><%= @serving["serving_description"] %></th>
       </tr>
       <tr>
@@ -47,13 +47,10 @@
             [label: "Protein", weight: @serving["protein"], is_primary: true]) %>
         <tr>
           <td colspan="2" class="border-b-11 border-nutrition-grey">
-
           </td>
         </tr>
-
         <%= render_nutrient(assigns,
             [label: "Vitamin D", weight: @serving["vitamin_d"], is_primary: true]) %>
-
         <%= render_nutrient(assigns,
             [label: "Calcium", weight: @serving["calcium"], rdi: RDI.calcium(@serving["calcium"]), is_primary: true, unit: "mg"]) %>
         <%= render_nutrient(assigns,
@@ -64,7 +61,6 @@
             [label: "Vitamin A", weight: @serving["vitamin_a"], rdi: RDI.vitamin_a(@serving["vitamin_a"]), is_primary: true, unit: "mcg"]) %>
         <%= render_nutrient(assigns,
             [label: "Vitamin C", weight: @serving["vitamin_c"], rdi: RDI.vitamin_c(@serving["vitamin_c"]), is_primary: true, unit: "mg"]) %>
-
       </tbody>
     </table>
   </section>

@@ -1,6 +1,8 @@
 defmodule FireweedWeb.MapLive.Index do
-  use FireweedWeb, :live_view
-  alias FireweedWeb.Components
+  use FireweedWeb, :surface_live_view
+
+  prop current_user, :any, required: true
+  prop admin_user, :boolean, required: true
 
   @impl true
   def mount(_params, %{"user_id" => user_id}, socket) do
@@ -21,9 +23,13 @@ defmodule FireweedWeb.MapLive.Index do
 
   @impl true
   def render(assigns) do
-    ~L"""
-      <%= live_component(@socket, Components.Navigation, id: :navigation, page: :map, current_user: @current_user, admin_user: @admin_user)%>
-      <%= live_component(@socket, Components.UnderConstruction, page: "Map")%>
+    ~H"""
+       <Navigation
+        page={{:map}}
+        current_user={{@current_user}}
+        admin_user={{@admin_user}}
+      />
+      <UnderConstruction page="Map" />
     """
   end
 end

@@ -1,6 +1,8 @@
 defmodule FireweedWeb.PageLive do
-  use FireweedWeb, :live_view
-  alias FireweedWeb.Components
+  use FireweedWeb, :surface_live_view
+
+  prop current_user, :any, required: true
+  prop admin_user, :boolean, required: true
 
   @impl true
   def mount(_params, %{"user_id" => user_id}, socket) do
@@ -17,5 +19,23 @@ defmodule FireweedWeb.PageLive do
     {:ok,
      socket
      |> assign(current_user: nil, admin_user: nil)}
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+      <Navigation
+        page={{:home}}
+        current_user={{@current_user}}
+        admin_user={{@admin_user}}
+      />
+      <section>
+        <div class="flex-grow flex items-center justify-center">
+          <Logo />
+          <br />
+          <h1>Welcome</h1>
+        </div>
+      </section>
+    """
   end
 end
