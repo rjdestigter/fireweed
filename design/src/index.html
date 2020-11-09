@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unolumo</title>
+    <link rel="stylesheet" href="./index.scss" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div data-root class="flex flex-col md:flex-row bg-teal-200">
+      <nav
+        class="flex content-center md:content-start md:flex-col order-last md:order-first bg-black-dark text-black text-gray-100 md:pt-2 whitespace-no-wrap overflow-auto"
+      >
+        <h3 class="font-black md:px-4 md:py-2 hidden md:block">Menu</h3>
+        <ul
+          class="pl-4 md:pl-0 flex-shrink-0 content-center flex md:block border-r-1 border-gray-700 md:border-r-0 pr-2 md:pr-6 mr-2 md:mr-0"
+        >
+          <li
+            class="px-2 md:px-6 py-2 flex flex-col justify-center md:block"
+            data-active="true"
+          >
+            <a
+              href="#"
+              title="Nutrition"
+              class="flex md:inline-flex content-center py-2 rounded-full transition-colors duration-100 text-gray-900 bg-gradient-to-r from-secondary to-primary"
+            >
+              <img
+                src="../../assets//static/icons/tableware.svg"
+                alt=""
+                class="box-content pl-4 w-4 mx-2"
+              />
+              <span class="pr-4">Nutrition</span>
+            </a>
+          </li>
+          <li class="px-2 md:px-6 py-2 flex flex-col justify-center md:block">
+            <a
+              href="#"
+              title="Heart Rate"
+              class="flex md:inline-flex content-center py-2 rounded-full transition-colors duration-100 hover:bg-primary hover:text-gray-900"
+            >
+              <img
+                src="../../assets//static/icons/heartrate.svg"
+                alt=""
+                class="box-content pl-4 w-4 mx-2"
+              />
+              <span class="pr-4">Heart Rate</span>
+            </a>
+          </li>
+          <li class="px-2 md:px-6 py-2 flex flex-col justify-center md:block">
+            <a
+              href="#"
+              title="Nutrition"
+              class="flex md:inline-flex content-center py-2 rounded-full transition-colors duration-100 hover:bg-primary hover:text-gray-900"
+            >
+              <img
+                src="../../assets//static/icons/map.svg"
+                alt=""
+                class="box-content pl-4 w-4 mx-2"
+              />
+              <span class="pr-4">Nutrition</span>
+            </a>
+          </li>
+        </ul>
+        <h3 class="font-black md:px-4 md:py-2 hidden md:block">Admin</h3>
+        <ul
+          class="flex-shrink-0 content-center flex md:block border-r-1 border-gray-700 md:border-r-0 pr-2 md:pr-6 mr-2 md:mr-0"
+        >
+          <li class="px-2 md:px-6 py-2 flex flex-col justify-center md:block">
+            <a
+              href="#"
+              title="Nutrition"
+              class="flex md:inline-flex content-center py-2 rounded-full transition-colors duration-100 hover:bg-primary hover:text-gray-900"
+            >
+              <img
+                src="../../assets//static/icons/tableware.svg"
+                alt=""
+                class="box-content pl-4 w-4 mx-2"
+              />
+              <span class="pr-4">Dashboard</span>
+            </a>
+          </li>
+          <li
+            class="px-2 md:px-6 py-2 flex flex-col justify-center md:block"
+            data-active="true"
+          >
+            <a
+              href="#"
+              title="Heart Rate"
+              class="flex md:inline-flex content-center py-2 rounded-full transition-colors duration-100 hover:bg-primary text-gray-900 bg-gradient-to-r from-secondary to-primary"
+            >
+              <img
+                src="../../assets//static/icons/heartrate.svg"
+                alt=""
+                class="box-content pl-4 w-4 mx-2"
+              />
+              <span class="pr-4">Users</span>
+            </a>
+          </li>
+          <li class="px-2 md:px-6 py-2 flex flex-col justify-center md:block">
+            <a
+              href="#"
+              title="Nutrition"
+              class="flex md:inline-flex content-center py-2 rounded-full transition-colors duration-100 hover:bg-primary hover:text-gray-900"
+            >
+              <img
+                src="../../assets//static/icons/map.svg"
+                alt=""
+                class="box-content pl-4 w-4 mx-2"
+              />
+              <span class="pr-4">Status</span>
+            </a>
+          </li>
+        </ul>
+        <div class="hidden md:block flex-grow"></div>
+        <section
+          class="p-3 flex items-center text-nutrition md:border-t-1 border-black-light"
+        >
+          <div
+            class="rounded-full bg-black-light"
+            style="width: 40px; height: 40px"
+          >
+            <div
+              class="rounded-full bg-primary"
+              style="width: 10px; height: 10px; left: 1px; top: 1px"
+            ></div>
+          </div>
+
+          <div class="text-sm px-2 text-white-softer">
+            <span class="font-bold">John de Stigter</span>
+            <br />
+            johndestigter@gmail.com
+
+            <div class="text-white-softest">
+              <a href="#">
+                <span class="font-flaticon flaticon-logout"></span>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </nav>
+      <main class="flex-grow text-gray-100 bg-black-medium md:max-w-lg border-r-2 border-black-dark">
+          <div data-timeline class="h-full">
+              <div class="absolute w-0 h-0 left-0 top-0">
+                <div class="bg-red-500 absolute px-4 py-2 rounded-full" data-event style="left:25px" >
+                    44bps
+                </div>
+              </div>
+          </div>
+      </main>
+    </div>
+    <script src="./timeline.ts"></script>
+  </body>
+</html>

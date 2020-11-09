@@ -1,0 +1,43 @@
+@import "./fonts/flaticon";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    position: relative;
+}
+
+html,
+body,
+div[data-root] {
+  height: 100%;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+div[data-root] {
+  > nav {
+
+    > ul {
+      > li {
+        > a {
+          > img {
+            transition: invert 0.2s;
+            will-change: invert;
+          }
+        }
+
+        &:not([data-active="true"]) {
+          > a {
+            &:not(:hover) {
+              img {
+                filter: invert(100%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
