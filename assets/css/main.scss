@@ -28,12 +28,21 @@ button,
 [data-root] {
   display: flex;
 
+  @media screen and (max-width: 450px) {
+    flex-direction: column;
+  }
+
+  >* {
+    overflow: hidden;
+  }
+
   > nav {
     display: flex;
     flex-direction: column;
     background-color: #1f1f1f;
     padding-top: 16px;
     flex: 0 0 auto;
+    
 
     > ul {
       list-style-type: none;
@@ -49,10 +58,8 @@ button,
 
 
     @media screen and (max-width: 450px) {
-      position: absolute;
-      z-index: 1;
-      bottom: 0;
-      width: 100%;
+      order: 1;
+      flex: 0 0 auto;
       flex-direction: row;
       overflow: auto;
       padding-top: 0;

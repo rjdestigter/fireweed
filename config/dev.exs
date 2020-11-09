@@ -88,6 +88,17 @@ fat_secret_client_secret =
     environment variable FAT_SECRET_CLIENT_SECRET is missing.
     """
 
+
 config :fireweed, FatSecret,
-  client_secret: fat_secret_client_secret,
-  client_id: fat_secret_client_id
+  fatsecret_client_secret: fat_secret_client_secret,
+  fatsecret_client_id: fat_secret_client_id
+
+
+usda_api_key =
+  System.get_env("USDA_API_KEY") ||
+    raise """
+    environment variable USDA_API_KEY is missing.
+    """
+
+config :fireweed, USDA,
+  usda_api_key: usda_api_key

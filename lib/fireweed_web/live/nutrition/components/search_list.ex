@@ -19,7 +19,6 @@ defmodule FireweedWeb.Nutrition.Components.SearchList do
             <span class="text-sm text-secondary">{{Map.get(food, "brand_name")}}</span>
           </h6>
           <h4>{{name}}</h4>
-          <p>{{desc}}></p>
         </LivePatch>
       </li>
     </ul>

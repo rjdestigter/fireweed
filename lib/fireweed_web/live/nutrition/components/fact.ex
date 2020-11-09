@@ -84,8 +84,8 @@ defmodule FireweedWeb.Nutrition.Components.Fact do
 
   def render(assigns) do
     ~H"""
-      <section class="font-nutrition text-nutrition outline-nutrition px-6 py-6 inline-block bg-black-dark">
-        <table class="m-0 border-collapse" width="255">
+      <section class="font-nutrition text-nutrition outline-nutrition px-6 py-6 bg-black-dark">
+        <table class="m-0 border-collapse w-full">
           <thead>
             <tr>
               <th colspan="2" class="font-black text-2xl pb-2 border-b-1 border-nutrition-grey">

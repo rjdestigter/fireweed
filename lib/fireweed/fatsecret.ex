@@ -79,8 +79,8 @@ defmodule FatSecret do
     end
   end
 
-  def login() do
-    [client_secret: secret, client_id: id] = Application.get_env(:fireweed, __MODULE__)
+  defp login() do
+    [fatsecret_client_secret: secret, fatsecret_client_id: id] = Application.get_env(:fireweed, __MODULE__)
 
     case HTTPoison.post(
            "https://oauth.fatsecret.com/connect/token",

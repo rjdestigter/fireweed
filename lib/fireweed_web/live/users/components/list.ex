@@ -37,7 +37,7 @@ defmodule FireweedWeb.UsersLive.Components.List do
   @impl true
   def render(assigns) do
     ~H"""
-      <table class="text-left text-base">
+      <table class="text-left text-base w-full">
         <thead>
           <tr>
           <th>Name</th>

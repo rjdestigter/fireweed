@@ -60,6 +60,7 @@ defmodule FireweedWeb.NutritionLive.Index do
   @impl true
   def handle_event("search", %{"query" => query}, socket) do
     send(self(), {:search, query})
+    send(self(), {:usda, query})
 
     {:noreply, socket |> assign(query: query, foods: :searching)}
   end
@@ -70,6 +71,12 @@ defmodule FireweedWeb.NutritionLive.Index do
   end
 
   @impl true
+  def handle_info({:usda, query}, socket) do
+    usda = USDA.search(query)
+    Fireweed.log("usda", usda)
+    {:noreply, socket |> assign(:usda, usda)}
+  end
+
   def handle_info({:search, query}, socket) do
     foods = FatSecret.search(query)
 
@@ -102,8 +109,8 @@ defmodule FireweedWeb.NutritionLive.Index do
       end
 
     search_class = case assigns.food do
-      nil -> "flex w-full md:w-2/5"
-      _ -> "hidden md:flex"
+      nil -> "flex flex-grow-0 flex-shrink-0 w-full md:w-1/2 xl:w-1/3"
+      _ -> "hidden md:flex flex-grow-0 flex-shrink-0 w-full md:w-1/2 xl:w-1/3"
     end
 
     servings_class = case assigns.food do
